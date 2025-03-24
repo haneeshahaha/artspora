@@ -1,0 +1,169 @@
+:root {
+    --neon-blue: #00f3ff;
+    --neon-pink: #ff00ff;
+    --dark-bg: #0a0a0a;
+    --grid-line: rgba(255,255,255,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--dark-bg);
+    color: white;
+    font-family: 'Segoe UI', system-ui;
+    overflow-x: hidden;
+}
+
+/* Login Form Styles */
+.cyber-form {
+    background: rgba(20,20,20,0.95);
+    padding: 2rem;
+    border: 2px solid var(--neon-blue);
+    border-radius: 15px;
+    width: 400px;
+    margin: 100px auto;
+    text-align: center;
+    box-shadow: 0 0 20px var(--neon-blue);
+}
+
+.form-group {
+    position: relative;
+    margin: 1.5rem 0;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+}
+
+.neon-border {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon-blue);
+    transition: width 0.3s ease;
+}
+
+.form-group input:focus ~ .neon-border {
+    width: 100%;
+}
+
+.cyber-button {
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+    border: none;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cyber-button:hover {
+    letter-spacing: 2px;
+}
+
+/* Courses Page Styles */
+.cyber-menu {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--neon-blue);
+    z-index: 1000;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 6rem 5%;
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+.cyber-card {
+    background: rgba(20,20,20,0.9);
+    border: 1px solid var(--neon-blue);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px var(--neon-blue);
+}
+
+.cyber-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    filter: grayscale(80%);
+    transition: all 0.3s ease;
+}
+
+.card-description {
+    color: #aaa;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    padding: 0 1rem;
+}
+
+.cyber-card:hover .card-image {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 1.5rem;
+    position: relative;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.footer {
+    background: rgba(10, 10, 10, 0.95);
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1.2rem;
+    border-top: 2px solid var(--neon-blue);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        padding: 6rem 2%;
+    }
+    .cyber-form {
+        width: 90%;
+        margin: 50px auto;
+    }
+}
