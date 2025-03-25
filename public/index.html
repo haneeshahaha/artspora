@@ -3,29 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artspora | Login</title>
+    <title>Artspora | Login & Signup</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="cyber-logo-container">
-        <img src="/Users/haneesh_144/Desktop/artspora/artspora/public/assetss/Screenshot 2025-03-19 at 12.00.56 AM.png" alt="Artspora" class="cyber-logo">
+        <img src="assetss/Screenshot 2025-03-19 at 12.00.56 AM.png" alt="Artspora" class="cyber-logo">
         <div class="logo-glitch"></div>
     </div>
-    <div class="cyber-form">
-        <h2>Welcome to Artspora</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <input type="email" id="email" placeholder="Email" required>
-                <span class="neon-border"></span>
-            </div>
-            <div class="form-group">
-                <input type="password" id="password" placeholder="Password" required>
-                <span class="neon-border"></span>
-            </div>
-            <button type="submit" class="cyber-button">Login</button>
-        </form>
+
+    <div class="cyber-container">
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button id="showLogin" class="cyber-button active">Login</button>
+            <button id="showSignup" class="cyber-button">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <div class="cyber-form" id="loginFormContainer">
+            <h2>Welcome Back</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <span class="neon-border"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <span class="neon-border"></span>
+                </div>
+                <button type="submit" class="cyber-button">Login</button>
+            </form>
+        </div>
+
+        <!-- Signup Form -->
+        <div class="cyber-form hidden" id="signupFormContainer">
+            <h2>Join Artspora</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <input type="email" id="signupEmail" placeholder="Email" required>
+                    <span class="neon-border"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="signupPassword" placeholder="Password" required>
+                    <span class="neon-border"></span>
+                </div>
+                <button type="submit" class="cyber-button">Sign Up</button>
+            </form>
+        </div>
     </div>
+
     <script src="js/script.js"></script>
 </body>
 </html>

@@ -1,31 +1,51 @@
-const cors = require('cors');
 const express = require('express');
-const path = require('path');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+
 const app = express();
 const port = 4000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
 
-// Dummy user database
-const users = [
-    { email: "student@artspora.com", password: "password123" }
-];
+const users = []; // Temporary in-memory user store
 
-// Login endpoint
-app.post('/login', (req, res) => {
+// Test Route - Check if the server is running
+app.get('/', (req, res) => {
+    res.send('✅ Server is running!');
+});
+
+// Registration Route - Hash password before storing
+app.post('/register', async (req, res) => {
     const { email, password } = req.body;
-    const user = users.find(u => u.email === email && u.password === password);
-    res.json({ success: !!user });
+    
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Store user
+    users.push({ email, password: hashedPassword });
+    
+    res.json({ success: true, message: "User registered!" });
 });
 
-// Courses page
-app.get('/courses', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/courses.html'));
+// Login Route - Compare hashed passwords
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    
+    // Find user
+    const user = users.find(u => u.email === email);
+    
+    if (!user) return res.json({ success: false, message: "User not found!" });
+    
+    // Compare password with the stored hash
+    const isMatch = await bcrypt.compare(password, user.password);
+    
+    if (!isMatch) return res.json({ success: false, message: "Invalid credentials!" });
+    
+    res.json({ success: true, message: "Login successful!" });
 });
 
+// Start the server
 app.listen(port, () => {
-    console.log(`Server running: http://localhost:${port}`);
+    console.log(`🚀 Server running at http://localhost:${port}`);
 });
