@@ -1,51 +1,79 @@
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const path = require('path');
+require('dotenv').config();
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 5001;
 
-app.use(cors());
+// Middleware
+app.use(cors({
+  origin: ['http://127.0.0.1:5500', 'http://localhost:5500'],
+  credentials: true
+}));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
 
-const users = []; // Temporary in-memory user store
+// MongoDB Connection (simplified)
+mongoose.connect('mongodb://127.0.0.1:27017/artsporaDB')
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => console.error("❌ MongoDB Error:", err));
 
-// Test Route - Check if the server is running
-app.get('/', (req, res) => {
-    res.send('✅ Server is running!');
+// User Model
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
 });
+const User = mongoose.model('User', userSchema);
 
-// Registration Route - Hash password before storing
+// Routes
 app.post('/register', async (req, res) => {
+  try {
     const { email, password } = req.body;
-    
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    
-    // Store user
-    users.push({ email, password: hashedPassword });
-    
-    res.json({ success: true, message: "User registered!" });
+    await User.create({ email, password: hashedPassword });
+    res.status(201).json({ success: true, message: "Registration successful!" });
+  } catch (error) {
+    res.status(400).json({ 
+      success: false, 
+      message: error.code === 11000 ? 'Email already exists' : error.message 
+    });
+  }
 });
 
-// Login Route - Compare hashed passwords
 app.post('/login', async (req, res) => {
+  try {
     const { email, password } = req.body;
+    const user = await User.findOne({ email });
     
-    // Find user
-    const user = users.find(u => u.email === email);
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
     
-    if (!user) return res.json({ success: false, message: "User not found!" });
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || 'your_jwt_secret_here',
+      { expiresIn: '1h' }
+    );
     
-    // Compare password with the stored hash
-    const isMatch = await bcrypt.compare(password, user.password);
-    
-    if (!isMatch) return res.json({ success: false, message: "Invalid credentials!" });
-    
-    res.json({ success: true, message: "Login successful!" });
+    res.json({ 
+      success: true, 
+      token, 
+      message: "Login successful!",
+      redirectUrl: "/courses"
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`🚀 Server running at http://localhost:${port}`);
+// Error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: "Something went wrong!" });
 });
+
+app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
